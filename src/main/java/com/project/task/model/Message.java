@@ -11,4 +11,3 @@ public class  Message{
 	private String message;
 	private Metadata metadata;
 }
-// No se xq esto se agrego arriba

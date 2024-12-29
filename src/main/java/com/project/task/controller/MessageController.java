@@ -2,39 +2,38 @@ package com.project.task.controller;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
 import com.project.task.model.Message;
-import com.project.task.service.MessageService;
 
 @RestController
+@RequestMapping("api/message")
 public class MessageController {
+
+        @PostMapping
+        public Message createMessage(@RequestBody Message message) {
+                return message;
+        }
+
  	
- 	private  MessageService messageService;
- 	
- 	@Autowired
- 	public MessageController(MessageService messageService) {
- 		this.messageService = messageService;
+ 	@GetMapping("{id}")
+ 	public Optional<Message> getMessageById(@PathVariable("id") Long id) {
+		return null; //	
  	}
- 	
- 	@GetMapping 
- 	public getMessage() {   //no creo que deba ser iterable
-		return messageService.getMessage();  // Como hago que sea FIFO el msj consumido	
- 	}
- 	
- 	@PostMapping
- 	public addMessage(Message message) {
- 		return messageService.addMessage(message);
- 	}
+
+	@GetMapping()
+        public Message getMessage() {
+                return message; // Debo asegurar que sea FIFO
+        }
  	
  	@PutMapping("{Id}")
- 	public void updateMessage(long id) {
- 		messageService.updateMessage(id);
+ 	public void updateMessage(@PathVariable("id") Long id) {
  	}
 }
