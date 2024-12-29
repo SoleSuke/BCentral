@@ -11,11 +11,11 @@ public class MessageServiceImpl implements MessageService {
 	public void addMessage(Message message) {
 	}
 	
-	public getMessage() {
+	public Message getMessage() {
 		return null;  /*--Como hacer que sea FIFO? --*/
 	}
 	
-	public Iterable<Message> updateMessage(long Id){
+	public Message updateMessage(long Id){
 		return null;
 	}
 }

@@ -17,10 +17,10 @@ import com.project.task.model.Message;
 @RequestMapping("api/message")
 public class MessageController {
 
-        @PostMapping
-        public Message createMessage(@RequestBody Message message) {
-                return message;
-        }
+	@PostMapping
+	public Message createMessage(@RequestBody Message message) {
+		return message;
+	}
 
  	
  	@GetMapping("{id}")
@@ -29,9 +29,9 @@ public class MessageController {
  	}
 
 	@GetMapping()
-        public Message getMessage() {
-                return message; // Debo asegurar que sea FIFO
-        }
+	public Message getMessage() {
+		return null;
+	}
  	
  	@PutMapping("{Id}")
  	public void updateMessage(@PathVariable("id") Long id) {
