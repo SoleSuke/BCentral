@@ -28,12 +28,13 @@ public class MessageController {
 		return message;
 	}
 
- 	
+/*-- 	
  	@GetMapping("{id}")
  	public Optional<Message> getMessageById(@PathVariable("id") Long id) {
 		return null; //	
  	}
-
+--*/
+	
 	@GetMapping()
 	public Message getMessage() {
 		return null;
