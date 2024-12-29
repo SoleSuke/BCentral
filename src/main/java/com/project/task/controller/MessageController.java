@@ -2,6 +2,8 @@ package com.project.task.controller;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +19,12 @@ import com.project.task.model.Message;
 @RequestMapping("api/message")
 public class MessageController {
 
+	@Autowired
+	private KafkaTemplate<String, String> kafkaTemplate;
+	
 	@PostMapping
 	public Message createMessage(@RequestBody Message message) {
+//		kafkaTemplate.send(message);
 		return message;
 	}
 
