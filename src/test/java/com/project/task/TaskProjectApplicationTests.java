@@ -30,6 +30,24 @@ class TaskProjectApplicationJUnitTest {
 	private MockMvc mockMvc;
 	
 	@Test
+	public void testNotFound() throws Exception {
+		Message msg = Message.builder().id("12345")
+				.timestamp("2024-12-23T11:19:32Z")
+				.message("Este es un mensaje de prueba")
+				.metadata(Metadata.builder().source("app1").type("notification").build()).build();
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		MockHttpServletResponse response = mockMvc.perform(post("/api")
+				.contentType("application/json")
+				.content(objectMapper.writeValueAsString(msg)))
+				.andDo(print())
+				.andExpect(status().is4xxClientError())
+				.andReturn().getResponse();
+		
+		
+	}
+	
+	@Test
 	public void testSuccessfullPostAndGet() throws Exception {
 		Message msg = Message.builder().id("12345")
 				.timestamp("2024-12-23T11:19:32Z")
@@ -43,7 +61,7 @@ class TaskProjectApplicationJUnitTest {
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful())
 				.andReturn().getResponse();
-		TimeUnit.SECONDS.sleep(1);
+		TimeUnit.SECONDS.sleep(2);
 		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful())
 		.andReturn().getResponse();
 		
@@ -78,7 +96,6 @@ class TaskProjectApplicationJUnitTest {
 				.andDo(print())
 				.andExpect(status().is5xxServerError())
 				.andReturn().getResponse();
-		
 		TimeUnit.SECONDS.sleep(1);
 		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is5xxServerError())
 		.andReturn().getResponse();
