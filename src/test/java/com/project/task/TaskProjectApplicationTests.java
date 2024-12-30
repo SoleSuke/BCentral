@@ -37,5 +37,4 @@ class TaskProjectApplicationJUnitTest {
 				.andDo(print());
 	}
 	
-
 }
