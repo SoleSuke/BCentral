@@ -1,46 +1,41 @@
 package com.project.task;
 
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.KafkaProducer;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.Optional;
-import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.kafka.*;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.task.model.Message;
 import com.project.task.model.Metadata;
-import com.project.task.TaskProjectApplication;
 
 @SpringBootTest
-@DirtiesContext
-@EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" })
+@AutoConfigureMockMvc
+@ExtendWith(SpringExtension.class)
 class TaskProjectApplicationJUnitTest {
 	
 	@Autowired
-	private KafkaConsumer consumer;
-	
-	@Autowired
-	private KafkaProducer producer;
-	private Metadata<String,String> metada;
-	
-	metadata<source,type> = <{"localhost","test1"},{"localhost","test2"},{"localhost","test3"},{"localhost","test4"}>;
+	private MockMvc mockMvc;
 	
 	@Test
-    public void givenEmbeddedKafkaBroker_whenSendingWithSimpleProducer_thenMessageReceived() 
-    	throws Exception {
-		String message = "Sending with our own simple KafkaProducer";
-    	        
-		producer.send(message.metadata.type, message);
-    	        
-		boolean messageConsumed = consumer.getLatch().await(10, TimeUnit.SECONDS);
-		assertTrue(messageConsumed);
-		assertThat(consumer.getPayload(), containsString(data));
-	}	
+	public void testPostMessage() throws Exception {
+		Message msg = Message.builder().id(1L).timestamp("00:00").message("lala").metadata(Metadata.builder().source("mySource").type("myType").build()).build();
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		mockMvc.perform(get("/api/message")).andDo(print());
+		
+		mockMvc.perform(post("/api/message")
+				.contentType("application/json")
+				.content(objectMapper.writeValueAsString(msg)))
+				.andDo(print());
+	}
 	
 
 }
