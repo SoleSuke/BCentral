@@ -2,7 +2,7 @@ package com.project.task;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,17 +26,49 @@ class TaskProjectApplicationJUnitTest {
 	private MockMvc mockMvc;
 	
 	@Test
-	public void testPostMessage() throws Exception {
-		Message msg = Message.builder().id(1L).timestamp("00:00").message("lala").metadata(Metadata.builder().source("mySource").type("myType").build()).build();
+	public void testSuccessfullPostAndGet() throws Exception {
+		Message msg = Message.builder().id("12345")
+				.timestamp("2024-12-23T11:19:32Z")
+				.message("Este es un mensaje de prueba")
+				.metadata(Metadata.builder().source("app1").type("notification").build()).build();
+		
 		ObjectMapper objectMapper = new ObjectMapper();
-		
-		mockMvc.perform(get("/api/message")).andDo(print());
-		
 		MockHttpServletResponse response = mockMvc.perform(post("/api/message")
 				.contentType("application/json")
 				.content(objectMapper.writeValueAsString(msg)))
 				.andDo(print())
+				.andExpect(status().is2xxSuccessful())
 				.andReturn().getResponse();
+		
+		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful())
+		.andReturn().getResponse();
+		
+		
+	}
+	
+	@Test
+	public void testPostMessageIncorrectTimestampFormat() throws Exception {
+		Message msg = Message.builder().id("12345")
+				.timestamp("2024-12-23T11")
+				.message("Este es un mensaje de prueba")
+				.metadata(Metadata.builder().source("app1").type("notification").build()).build();
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		MockHttpServletResponse response = mockMvc.perform(post("/api/message")
+				.contentType("application/json")
+				.content(objectMapper.writeValueAsString(msg)))
+				.andDo(print())
+				.andExpect(status().is5xxServerError())
+				.andReturn().getResponse();
+		
+	}
+	
+	@Test
+	public void testGetFailure() throws Exception {
+		MockHttpServletResponse response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is5xxServerError())
+		.andReturn().getResponse();
+		
+		
 		
 	}
 	
