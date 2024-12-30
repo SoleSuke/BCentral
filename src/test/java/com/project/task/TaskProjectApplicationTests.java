@@ -26,9 +26,9 @@ class TaskProjectApplicationJUnitTest {
 	
 	@Autowired
 	private KafkaProducer producer;
-	private Metadata<String,String> metada;
+	private Metadata metada;
 	
-	metadata<source,type> = <{"localhost","test1"},{"localhost","test2"},{"localhost","test3"},{"localhost","test4"}>;
+	metadata<source,type> = {"localhost","test1"};
 	
 	@Test
     public void givenEmbeddedKafkaBroker_whenSendingWithSimpleProducer_thenMessageReceived() 
@@ -42,5 +42,4 @@ class TaskProjectApplicationJUnitTest {
 		assertThat(consumer.getPayload(), containsString(data));
 	}	
 	
-
 }
