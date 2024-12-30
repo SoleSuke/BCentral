@@ -42,9 +42,9 @@ public class MessageController {
 	
 	@PostMapping
 	public ResponseEntity<Message> createMessage(@RequestBody Message message) {
-		kafkaTemplate.send(topicName, message);
 		try {
-			message.validateTimestamp();
+			message.validate();
+			kafkaTemplate.send(topicName, message);
 			return ResponseEntity.accepted().body(message);
 		} catch (RuntimeException ex) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to parse JSON", ex);
@@ -77,10 +77,4 @@ public class MessageController {
  	@PutMapping("{Id}")
  	public void updateMessage(@PathVariable("id") Long id) {
  	}
- 	
- 	
-    @KafkaListener(topics = "prueba")
-    public void listenTopic(Message message) {
-    	
-    }
 }

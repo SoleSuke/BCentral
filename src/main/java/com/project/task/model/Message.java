@@ -18,7 +18,9 @@ public class Message {
 	private String message;
 	private Metadata metadata;
 	
-	public void validateTimestamp() {
+	public void validate() {
+		if(id == null || timestamp == null || message == null || metadata == null)
+			throw new NullPointerException("Values are null");
 		DateTimeFormatter formatter = ISODateTimeFormat.dateTimeNoMillis();
 		formatter.parseDateTime(timestamp);
 	}

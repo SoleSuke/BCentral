@@ -1,8 +1,12 @@
 package com.project.task;
 
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +43,7 @@ class TaskProjectApplicationJUnitTest {
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful())
 				.andReturn().getResponse();
-		
+		TimeUnit.SECONDS.sleep(1);
 		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful())
 		.andReturn().getResponse();
 		
@@ -60,6 +64,24 @@ class TaskProjectApplicationJUnitTest {
 				.andDo(print())
 				.andExpect(status().is5xxServerError())
 				.andReturn().getResponse();
+		
+	}
+	
+	@Test
+	public void testPostIncorrectMessage() throws Exception {
+		WrongClass msg = WrongClass.builder().myId(1L).strField("LALA").build();
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		MockHttpServletResponse response = mockMvc.perform(post("/api/message")
+				.contentType("application/json")
+				.content(objectMapper.writeValueAsString(msg)))
+				.andDo(print())
+				.andExpect(status().is5xxServerError())
+				.andReturn().getResponse();
+		
+		TimeUnit.SECONDS.sleep(1);
+		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is5xxServerError())
+		.andReturn().getResponse();
 		
 	}
 	
