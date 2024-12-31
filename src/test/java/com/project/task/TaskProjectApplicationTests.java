@@ -31,6 +31,8 @@ class TaskProjectApplicationJUnitTest {
 	
 	@Test
 	public void testNotFound() throws Exception {
+		System.out.println("------------------------------TEST_NOT_FOUND------------------------------");
+		System.out.println();
 		Message msg = Message.builder().id("12345")
 				.timestamp("2024-12-23T11:19:32Z")
 				.message("Este es un mensaje de prueba")
@@ -43,12 +45,15 @@ class TaskProjectApplicationJUnitTest {
 				.andDo(print())
 				.andExpect(status().is4xxClientError())
 				.andReturn().getResponse();
-		
+		System.out.println("__________________________________________________________________________");
+		System.out.println("__________________________________________________________________________");
 		
 	}
 	
 	@Test
 	public void testSuccessfullPostAndGet() throws Exception {
+		System.out.println("-------------------------TEST_POST_AND_GET_OK-----------------------------");
+		System.out.println();
 		Message msg = Message.builder().id("12345")
 				.timestamp("2024-12-23T11:19:32Z")
 				.message("Este es un mensaje de prueba")
@@ -65,11 +70,15 @@ class TaskProjectApplicationJUnitTest {
 		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful())
 		.andReturn().getResponse();
 		
-		
+		System.out.println("__________________________________________________________________________");
+		System.out.println("__________________________________________________________________________");
+	
 	}
 	
 	@Test
 	public void testPostMessageIncorrectTimestampFormat() throws Exception {
+		System.out.println("--------------------TEST_POST_MSG_WRONG_TIME_FORMAT-----------------------");
+		System.out.println("");
 		Message msg = Message.builder().id("12345")
 				.timestamp("2024-12-23T11")
 				.message("Este es un mensaje de prueba")
@@ -83,10 +92,14 @@ class TaskProjectApplicationJUnitTest {
 				.andExpect(status().is5xxServerError())
 				.andReturn().getResponse();
 		
+		System.out.println("__________________________________________________________________________");
+		System.out.println("__________________________________________________________________________");
+	
 	}
 	
 	@Test
 	public void testPostIncorrectMessage() throws Exception {
+		System.out.println("------------------------TEST_POST_WRONG_MSG-------------------------------");
 		WrongClass msg = WrongClass.builder().myId(1L).strField("LALA").build();
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -99,16 +112,58 @@ class TaskProjectApplicationJUnitTest {
 		TimeUnit.SECONDS.sleep(1);
 		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is5xxServerError())
 		.andReturn().getResponse();
+
+		System.out.println("__________________________________________________________________________");
+		System.out.println("__________________________________________________________________________");
 		
 	}
 	
 	@Test
 	public void testGetFailure() throws Exception {
+		System.out.println("-------------------------------TEST_POST_WRONG_MSG-------------------------");
 		MockHttpServletResponse response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is5xxServerError())
 		.andReturn().getResponse();
 		
+		System.out.println("__________________________________________________________________________");
+		System.out.println("__________________________________________________________________________");
 		
+	}
+	
+	@Test
+	public void testSuccessfullPostPostAndGet() throws Exception {
+		System.out.println("---------------------TEST_POST1_POST2_AND_GET_OK--------------------------");
+		System.out.println();
+		Message msg = Message.builder().id("45678")
+				.timestamp("2024-12-29T18:19:32Z")
+				.message("Este es un primer mensaje de prueba")
+				.metadata(Metadata.builder().source("app1").type("notification").build()).build();
 		
+		ObjectMapper objectMapper = new ObjectMapper();
+		MockHttpServletResponse response = mockMvc.perform(post("/api/message")
+				.contentType("application/json")
+				.content(objectMapper.writeValueAsString(msg)))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful())
+				.andReturn().getResponse();
+		TimeUnit.SECONDS.sleep(2);
+		
+		msg = Message.builder().id("45679")
+				.timestamp("2024-12-29T18:20:33Z")
+				.message("Este es un segundo mensaje de prueba")
+				.metadata(Metadata.builder().source("app2").type("notification").build()).build();
+		
+		response = mockMvc.perform(post("/api/message")
+				.contentType("application/json")
+				.content(objectMapper.writeValueAsString(msg)))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful())
+				.andReturn().getResponse();
+		TimeUnit.SECONDS.sleep(2);
+		
+		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful()).andReturn().getResponse();
+		System.out.println("__________________________________________________________________________");
+		System.out.println("__________________________________________________________________________");
+	
 	}
 	
 }
