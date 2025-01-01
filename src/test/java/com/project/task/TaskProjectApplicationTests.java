@@ -56,6 +56,7 @@ class TaskProjectApplicationJUnitTest {
 				.andReturn().getResponse();
 
 		messagesById.clear();
+		messagesById.clear();
 		System.out.println("__________________________________________________________________________");
 		System.out.println("__________________________________________________________________________");
 		
@@ -81,6 +82,7 @@ class TaskProjectApplicationJUnitTest {
 		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful())
 		.andReturn().getResponse();
 		
+		messagesById.clear();
 		messagesById.clear();
 		System.out.println("__________________________________________________________________________");
 		System.out.println("__________________________________________________________________________");
@@ -125,6 +127,7 @@ class TaskProjectApplicationJUnitTest {
 		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is5xxServerError())
 		.andReturn().getResponse();
 		
+		messagesById.clear();
 		messagesById.clear();
 		System.out.println("__________________________________________________________________________");
 		System.out.println("__________________________________________________________________________");
@@ -176,6 +179,7 @@ class TaskProjectApplicationJUnitTest {
 		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful()).andReturn().getResponse();
 		
 		messagesById.clear();
+		messagesById.clear();
 		System.out.println("__________________________________________________________________________");
 		System.out.println("__________________________________________________________________________");
 	
@@ -204,7 +208,7 @@ class TaskProjectApplicationJUnitTest {
 				.message("Este es un segundo mensaje de prueba")
 				.metadata(Metadata.builder().source("app2").type("notification").build()).build();
 		
-		response = mockMvc.perform(post("/api/message")
+		response = mockMvc.perform(put("/api/message/12345")
 				.contentType("application/json")
 				.content(objectMapper.writeValueAsString(msg)))
 				.andDo(print())
@@ -212,42 +216,9 @@ class TaskProjectApplicationJUnitTest {
 				.andReturn().getResponse();
 		TimeUnit.SECONDS.sleep(2);
 		
-
-		Message msg2 = Message.builder().id("45678")
-					.timestamp("2024-12-30T18:19:32Z")
-					.message("Este es un tercer mensaje de prueba con update")
-					.metadata(Metadata.builder().source("app1").type("notification").build()).build();
-		TimeUnit.SECONDS.sleep(2);
-		String response2String=" ";
-		String msg2String;
-		
-		
-		for ( int i=0; response2String.isEmpty() != true; i++)
-		{
-			response2String = mockMvc.perform(get("/api/message")).andReturn().getResponse().getContentAsString();
-			
-			msg2String = objectMapper.writeValueAsString(msg2);
-			
-			if ( response2String == msg2String )
-			{
-				response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful()).andReturn().getResponse();
-				TimeUnit.SECONDS.sleep(2);
-				
-				response = mockMvc.perform(post("/api/message")
-						.contentType("application/json")
-						.content(objectMapper.writeValueAsString(msg2)))
-						.andDo(print())
-						.andExpect(status().is2xxSuccessful())
-						.andReturn().getResponse();
-				TimeUnit.SECONDS.sleep(2);
-				break;
-			}
-		}
-		
-
-		
 		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful()).andReturn().getResponse();
 		
+		messagesById.clear();
 		messagesById.clear();
 		System.out.println("__________________________________________________________________________");
 		System.out.println("__________________________________________________________________________");

@@ -101,13 +101,14 @@ public class MessageController {
 			try {
  				message.validate();
  				// Remove message from Maps
- 				messagesById.remove(msg);
+ 				messagesById.remove(id);
  				for (Entry<Long, Message> e: messagesByReceivedTS.entrySet()) {
  	 				if (e.getValue().getId().compareTo(id) == 0) { 
  	 					messagesByReceivedTS.remove(e.getKey());
  	 					break;
  	 				}
  	 			}
+ 				//////////////////////
  				kafkaTemplate.send(topicName, message);
  				log.debug("PUT request update a message with this: " + message.getMessage());
  				return ResponseEntity.accepted().body(message);
