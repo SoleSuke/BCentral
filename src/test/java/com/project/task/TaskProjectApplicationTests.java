@@ -186,8 +186,8 @@ class TaskProjectApplicationJUnitTest {
 	}
 	
 	@Test
-	public void testSuccessfullPostPostPutAndGet() throws Exception {
-		System.out.println("---------------------TEST_POST1_POST2_PUT1_AND_GET_OK--------------------------");
+	public void testSuccessfullPostPutAndGet() throws Exception {
+		System.out.println("---------------------TEST_POST_PUT_AND_GET_OK--------------------------");
 		System.out.println();
 		Message msg = Message.builder().id("12345")
 				.timestamp("2024-12-29T18:19:32Z")
