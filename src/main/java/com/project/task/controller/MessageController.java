@@ -89,28 +89,29 @@ public class MessageController {
  			try {
  				message.validate();
  				kafkaTemplate.send(topicName, message);
+ 				log.debug("PUT request created a new message: " + message);
  				return ResponseEntity.accepted().body(message);
- 				log.debug("PUT request created a new message: " + message.getMessage());
  			} catch (RuntimeException ex) {
  				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to parse JSON", ex);
  			}
  		} else {
- 			for (Entry<Long, Message> e: messagesByReceivedTS.entrySet()) {
- 				if (e.getValue().getId().compareTo(id) == 0) { 
- 					messagesByReceivedTS.remove(e.getKey());
- 					break;
- 				}
- 			}
+ 			
 
 			try {
  				message.validate();
- 				ObjectMapper mapper = new ObjectMapper();
- 				String body = mapper.writeValueAsString(msg);
+ 				// Remove message from Maps
+ 				for (Entry<Long, Message> e: messagesByReceivedTS.entrySet()) {
+ 	 				if (e.getValue().getId().compareTo(id) == 0) { 
+ 	 					messagesByReceivedTS.remove(e.getKey());
+ 	 					break;
+ 	 				}
+ 	 			}
+ 				messagesById.remove(msg);
+ 				//////////////////////////
  				kafkaTemplate.send(topicName, message);
  				log.debug("PUT request update a message with this: " + message.getMessage());
- 				messagesById.remove(msg);
  				return ResponseEntity.accepted().body(message);
- 			} catch (RuntimeException | JsonProcessingException ex) {
+ 			} catch (RuntimeException ex) {
  				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to parse JSON", ex);
  			}			 			
  		}
