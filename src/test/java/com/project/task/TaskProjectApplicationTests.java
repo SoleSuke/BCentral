@@ -182,8 +182,8 @@ class TaskProjectApplicationJUnitTest {
 	}
 	
 	@Test
-	public void testSuccessfullPostPostPutAndGet() throws Exception {
-		System.out.println("---------------------TEST_POST1_POST2_PUT1_AND_GET_OK--------------------------");
+	public void testSuccessfullPostPutAndGet() throws Exception {
+		System.out.println("---------------------TEST_POST_PUT_AND_GET_OK--------------------------");
 		System.out.println();
 		Message msg = Message.builder().id("12345")
 				.timestamp("2024-12-29T18:19:32Z")
@@ -199,54 +199,20 @@ class TaskProjectApplicationJUnitTest {
 				.andReturn().getResponse();
 		TimeUnit.SECONDS.sleep(2);
 		
-		msg = Message.builder().id("45679")
-				.timestamp("2024-12-29T18:20:33Z")
-				.message("Este es un segundo mensaje de prueba")
-				.metadata(Metadata.builder().source("app2").type("notification").build()).build();
-		
-		response = mockMvc.perform(post("/api/message")
-				.contentType("application/json")
-				.content(objectMapper.writeValueAsString(msg)))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful())
-				.andReturn().getResponse();
-		TimeUnit.SECONDS.sleep(2);
-		
-
-		Message msg2 = Message.builder().id("45678")
+		Message msg2 = Message.builder().id("12345")
 					.timestamp("2024-12-30T18:19:32Z")
-					.message("Este es un tercer mensaje de prueba con update")
+					.message("Este es un segundo mensaje de prueba con update")
 					.metadata(Metadata.builder().source("app1").type("notification").build()).build();
 		TimeUnit.SECONDS.sleep(2);
-		String response2String=" ";
-		String msg2String;
-		
-		
-		for ( int i=0; response2String.isEmpty() != true; i++)
-		{
-			response2String = mockMvc.perform(get("/api/message")).andReturn().getResponse().getContentAsString();
-			
-			msg2String = objectMapper.writeValueAsString(msg2);
-			
-			if ( response2String == msg2String )
-			{
-				response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful()).andReturn().getResponse();
-				TimeUnit.SECONDS.sleep(2);
 				
-				response = mockMvc.perform(post("/api/message")
+		response = mockMvc.perform(put("/api/message")
 						.contentType("application/json")
 						.content(objectMapper.writeValueAsString(msg2)))
 						.andDo(print())
 						.andExpect(status().is2xxSuccessful())
-						.andReturn().getResponse();
-				TimeUnit.SECONDS.sleep(2);
-				break;
-			}
-		}
-		
-
-		
-		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful()).andReturn().getResponse();
+						.andReturn().getResponse();		
+		TimeUnit.SECONDS.sleep(2);
+		messagesById.clear();		
 		
 		messagesById.clear();
 		System.out.println("__________________________________________________________________________");
