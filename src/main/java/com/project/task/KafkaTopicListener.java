@@ -31,7 +31,7 @@ public class KafkaTopicListener {
 		return messageByReceivedTS_;
 	}
 	
-	@KafkaListener(topics = "prueba")
+	@KafkaListener(topics = "${bcentral.application.topic.name}")
 	public void messageListener(@Payload Message message, @Header(KafkaHeaders.RECEIVED_TIMESTAMP) long ts) {
 		messageByReceivedTS_.put(ts, message);
 		messagesById_.put(message.getId(), message);
