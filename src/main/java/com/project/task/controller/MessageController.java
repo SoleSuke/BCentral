@@ -73,6 +73,7 @@ public class MessageController {
 			ObjectMapper mapper = new ObjectMapper();
 			String body = mapper.writeValueAsString(e.getValue());
 			messagesByReceivedTS.remove(e.getKey());
+			messagesById.remove(e.getValue());
 			return ResponseEntity.accepted().body(body);
 		} catch (JsonProcessingException ex) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to parse JSON", ex);
@@ -80,7 +81,7 @@ public class MessageController {
 	}
  	
  	@PutMapping("{Id}")
- 	public ResponseEntity<Message> updateMessage(@PathVariable("id") String id, @RequestBody Message message) {
+ 	public ResponseEntity<Message> updateMessage(@PathVariable("Id") String id, @RequestBody Message message) {
  		log.debug("PUT request with body: " + message);
  		Message msg = messagesById.get(id);
  		if ( (messagesByReceivedTS.size() == 0) || ( msg == null))
@@ -89,6 +90,7 @@ public class MessageController {
  				message.validate();
  				kafkaTemplate.send(topicName, message);
  				return ResponseEntity.accepted().body(message);
+ 				log.debug("PUT request created a new message: " + message.getMessage());
  			} catch (RuntimeException ex) {
  				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to parse JSON", ex);
  			}
@@ -105,6 +107,8 @@ public class MessageController {
  				ObjectMapper mapper = new ObjectMapper();
  				String body = mapper.writeValueAsString(msg);
  				kafkaTemplate.send(topicName, message);
+ 				log.debug("PUT request update a message with this: " + message.getMessage());
+ 				messagesById.remove(msg);
  				return ResponseEntity.accepted().body(message);
  			} catch (RuntimeException | JsonProcessingException ex) {
  				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to parse JSON", ex);
