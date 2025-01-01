@@ -83,7 +83,7 @@ public class MessageController {
  	
  	@PutMapping("{Id}")
  	public ResponseEntity<Message> updateMessage(@PathVariable("Id") String id, @RequestBody Message message) {
- 		log.debug("PUT request with body: " + message);
+ 		log.info("PUT request ID: " + id + ", with body: " + message);
  		Message msg = messagesById.get(id);
  		if ( (messagesByReceivedTS.size() == 0) || ( msg == null))
  		{
