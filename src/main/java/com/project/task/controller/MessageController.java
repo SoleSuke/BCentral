@@ -73,7 +73,7 @@ public class MessageController {
 			ObjectMapper mapper = new ObjectMapper();
 			String body = mapper.writeValueAsString(e.getValue());
 			messagesByReceivedTS.remove(e.getKey());
-			messagesById.remove(e.getValue());
+			messagesById.remove(e.getValue().getId());
 			return ResponseEntity.accepted().body(body);
 		} catch (JsonProcessingException ex) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to parse JSON", ex);
