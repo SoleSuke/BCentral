@@ -17,4 +17,8 @@ II.3.- Execute: mvn compile
 II.4.- If you want to execute the Junit test, please execute: mvn test;
 II.5.1.- If you want to execute the Program and you are using an IDE like Eclipse or IntelliJ IDEA, please open the program; compile the program and run with the IDE.
 II.5.2.- If you want to execute the Program by command line please download the fat jar taskProject-0.0.1-SNAPSHOT.jar.
+       - Download the code of this Project to a DestinyProjectDirectory and the move to DestinyProjectDirectory ==> Execute: cd <DestinityProjectDirectoy>
+       - Execute: mvn clean
+       - Execute: mvn package
+       - The fat jar will be available in the <DestinityProjectDirectoy>/target/
        - Execute: java -jar taskProject-0.0.1-SNAPSHOT.jar
