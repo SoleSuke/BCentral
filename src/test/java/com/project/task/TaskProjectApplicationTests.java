@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -170,6 +171,56 @@ class TaskProjectApplicationJUnitTest {
 				.andExpect(status().is2xxSuccessful())
 				.andReturn().getResponse();
 		TimeUnit.SECONDS.sleep(2);
+		
+		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful()).andReturn().getResponse();
+		
+		messagesById.clear();
+		System.out.println("__________________________________________________________________________");
+		System.out.println("__________________________________________________________________________");
+	
+	}
+	
+	@Test
+	public void testSuccessfullPostPostPutAndGet() throws Exception {
+		System.out.println("---------------------TEST_POST1_POST2_PUT1_AND_GET_OK--------------------------");
+		System.out.println();
+		Message msg = Message.builder().id("45678")
+				.timestamp("2024-12-29T18:19:32Z")
+				.message("Este es un primer mensaje de prueba")
+				.metadata(Metadata.builder().source("app1").type("notification").build()).build();
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		MockHttpServletResponse response = mockMvc.perform(post("/api/message")
+				.contentType("application/json")
+				.content(objectMapper.writeValueAsString(msg)))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful())
+				.andReturn().getResponse();
+		TimeUnit.SECONDS.sleep(2);
+		
+		msg = Message.builder().id("45679")
+				.timestamp("2024-12-29T18:20:33Z")
+				.message("Este es un segundo mensaje de prueba")
+				.metadata(Metadata.builder().source("app2").type("notification").build()).build();
+		
+		response = mockMvc.perform(post("/api/message")
+				.contentType("application/json")
+				.content(objectMapper.writeValueAsString(msg)))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful())
+				.andReturn().getResponse();
+		TimeUnit.SECONDS.sleep(2);
+		
+		response = mockMvc.perform(get("/api/message/45678"))
+											.andDo(print())
+											.andExpect(status().is2xxSuccessful())
+											.andReturn().getResponse();
+		TimeUnit.SECONDS.sleep(2);
+		
+		Message msg2 = Message.builder().id("45678")
+				.timestamp("2024-12-30T18:19:32Z")
+				.message("Este es un tercer mensaje de prueba con update")
+				.metadata(Metadata.builder().source("app1").type("notification").build()).build();
 		
 		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful()).andReturn().getResponse();
 		

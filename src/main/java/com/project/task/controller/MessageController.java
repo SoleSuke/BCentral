@@ -2,6 +2,7 @@ package com.project.task.controller;
 
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.lang.runtime.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -100,10 +101,10 @@ public class MessageController {
 			try {
  				message.validate();
  				// Remove message from Maps
+ 				messagesById.remove(msg);
  				for (Entry<Long, Message> e: messagesByReceivedTS.entrySet()) {
  	 				if (e.getValue().getId().compareTo(id) == 0) { 
  	 					messagesByReceivedTS.remove(e.getKey());
-						messagesById.remove(e.getValue().getId());
  	 					break;
  	 				}
  	 			}
