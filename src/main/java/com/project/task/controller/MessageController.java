@@ -103,11 +103,10 @@ public class MessageController {
  				for (Entry<Long, Message> e: messagesByReceivedTS.entrySet()) {
  	 				if (e.getValue().getId().compareTo(id) == 0) { 
  	 					messagesByReceivedTS.remove(e.getKey());
+						messagesById.remove(e.getValue().getId());
  	 					break;
  	 				}
  	 			}
- 				messagesById.remove(msg);
- 				//////////////////////////
  				kafkaTemplate.send(topicName, message);
  				log.debug("PUT request update a message with this: " + message.getMessage());
  				return ResponseEntity.accepted().body(message);
