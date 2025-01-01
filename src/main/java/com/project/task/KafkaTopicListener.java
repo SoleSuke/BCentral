@@ -12,12 +12,15 @@ import org.springframework.messaging.handler.annotation.Payload;
 
 import com.project.task.model.Message;
 
+import lombok.extern.apachecommons.CommonsLog;
+
 @Configuration
 @EnableKafka
+@CommonsLog
 public class KafkaTopicListener {
 
 	private TreeMap<String, Message> messagesById_;
-	private TreeMap<Long, Message> messageByReceivedTS_;
+	private TreeMap<Long, Message> messagesByReceivedTS_;
 	
 	@Bean
 	public TreeMap<String, Message> messagesById() {
@@ -26,16 +29,15 @@ public class KafkaTopicListener {
 	}
 	
 	@Bean
-	public TreeMap<Long, Message> messageByReceivedTS() {
-		messageByReceivedTS_ = new TreeMap<Long, Message>();
-		return messageByReceivedTS_;
+	public TreeMap<Long, Message> messagseByReceivedTS() {
+		messagesByReceivedTS_ = new TreeMap<Long, Message>();
+		return messagesByReceivedTS_;
 	}
 	
 	@KafkaListener(topics = "${bcentral.application.topic.name}")
 	public void messageListener(@Payload Message message, @Header(KafkaHeaders.RECEIVED_TIMESTAMP) long ts) {
-		messageByReceivedTS_.put(ts, message);
+		log.info("Message received: " + message +" on timestamp: " + ts);
+		messagesByReceivedTS_.put(ts, message);
 		messagesById_.put(message.getId(), message);
-		System.out.println("Message Received: " + message);
-		System.out.println("TreeMap size: " + messagesById_.size());
 	}
 }

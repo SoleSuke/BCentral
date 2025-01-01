@@ -22,8 +22,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.task.model.Message;
 
+import lombok.extern.apachecommons.CommonsLog;
+
 @RestController
 @RequestMapping("api/message")
+@CommonsLog
 public class MessageController {
 
 	@Autowired
@@ -33,7 +36,7 @@ public class MessageController {
 	private TreeMap<String, Message> messagesById;
 	
 	@Autowired
-	private TreeMap<Long, Message> messageByReceivedTS;
+	private TreeMap<Long, Message> messagesByReceivedTS;
 	
 	
 	@Value(value = "${bcentral.application.topic.name}")
@@ -42,6 +45,7 @@ public class MessageController {
 	
 	@PostMapping
 	public ResponseEntity<Message> createMessage(@RequestBody Message message) {
+		log.debug("POST request with body: " + message);
 		try {
 			message.validate();
 			kafkaTemplate.send(topicName, message);
@@ -60,14 +64,15 @@ public class MessageController {
 	
 	@GetMapping()
 	public ResponseEntity<String> getMessage() {
-		if (messageByReceivedTS.size() == 0)
+		log.debug("GET request");
+		if (messagesByReceivedTS.size() == 0)
 			return ResponseEntity.internalServerError().body("No items in queue");
 		
 		try {
-			Entry<Long, Message> e = messageByReceivedTS.firstEntry();
+			Entry<Long, Message> e = messagesByReceivedTS.firstEntry();
 			ObjectMapper mapper = new ObjectMapper();
 			String body = mapper.writeValueAsString(e.getValue());
-			messageByReceivedTS.remove(e.getKey());
+			messagesByReceivedTS.remove(e.getKey());
 			return ResponseEntity.accepted().body(body);
 		} catch (JsonProcessingException ex) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to parse JSON", ex);
