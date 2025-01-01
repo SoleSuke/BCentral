@@ -203,9 +203,9 @@ class TaskProjectApplicationJUnitTest {
 				.andReturn().getResponse();
 		TimeUnit.SECONDS.sleep(2);
 		
-		msg = Message.builder().id("45679")
-				.timestamp("2024-12-29T18:20:33Z")
-				.message("Este es un segundo mensaje de prueba")
+		msg = Message.builder().id("12345")
+				.timestamp("2024-12-30T18:20:33Z")
+				.message("Este es un segundo mensaje de prueba para test update")
 				.metadata(Metadata.builder().source("app2").type("notification").build()).build();
 		
 		response = mockMvc.perform(put("/api/message/12345")
