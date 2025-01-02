@@ -56,7 +56,7 @@ class TaskProjectApplicationJUnitTest {
 				.andReturn().getResponse();
 
 		messagesById.clear();
-		messagesById.clear();
+		messageByReceivedTS.clear();
 		System.out.println("__________________________________________________________________________");
 		System.out.println("__________________________________________________________________________");
 		
@@ -83,7 +83,7 @@ class TaskProjectApplicationJUnitTest {
 		.andReturn().getResponse();
 		
 		messagesById.clear();
-		messagesById.clear();
+		messageByReceivedTS.clear();
 		System.out.println("__________________________________________________________________________");
 		System.out.println("__________________________________________________________________________");
 	
@@ -128,7 +128,7 @@ class TaskProjectApplicationJUnitTest {
 		.andReturn().getResponse();
 		
 		messagesById.clear();
-		messagesById.clear();
+		messageByReceivedTS.clear();
 		System.out.println("__________________________________________________________________________");
 		System.out.println("__________________________________________________________________________");
 		
@@ -179,7 +179,7 @@ class TaskProjectApplicationJUnitTest {
 		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful()).andReturn().getResponse();
 		
 		messagesById.clear();
-		messagesById.clear();
+		messageByReceivedTS.clear();
 		System.out.println("__________________________________________________________________________");
 		System.out.println("__________________________________________________________________________");
 	
@@ -219,7 +219,7 @@ class TaskProjectApplicationJUnitTest {
 		response = mockMvc.perform(get("/api/message")).andDo(print()).andExpect(status().is2xxSuccessful()).andReturn().getResponse();
 		
 		messagesById.clear();
-		messagesById.clear();
+		messageByReceivedTS.clear();
 		System.out.println("__________________________________________________________________________");
 		System.out.println("__________________________________________________________________________");
 	
